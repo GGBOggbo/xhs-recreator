@@ -1,0 +1,40 @@
+# === Secrets (绝对不能提交) ===
+.env
+*.env
+!.env.example
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# === Node.js ===
+node_modules/
+frontend/node_modules/
+spider_xhs/node_modules/
+
+# === Build output ===
+frontend/dist/
+build/
+
+# === Runtime data (运行时生成的文件) ===
+output/
+!output/.gitkeep
+data/*.db
+data/*.sqlite*
+spider_xhs/output/
+spider_xhs/datas/
+
+# === Logs ===
+*.log
+
+# === IDE / OS ===
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo

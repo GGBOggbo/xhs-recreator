@@ -1,0 +1,35 @@
+# FastAPI 框架
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# 数据库
+sqlalchemy==2.0.25
+aiosqlite==0.19.0
+
+# 配置管理
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# HTTP 客户端
+httpx==0.26.0
+requests==2.31.0
+
+# 日志
+loguru==0.7.2
+
+# 智谱 AI SDK
+zhipuai==2.0.1
+
+# Google AI
+google-generativeai==0.3.2
+
+# 图片处理
+pillow==10.2.0
+
+# 工具
+retry==0.9.2
+openpyxl==3.1.2
+PyExecJS==1.5.1

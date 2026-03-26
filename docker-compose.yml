@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # 后端API服务
+  hongxin-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: hongxin-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/.env:/app/.env
+      - ./backend/prompts.yaml:/app/prompts.yaml
+      - ./output:/app/output
+      - ./data:/app/data
+      # Spider_XHS 爬虫模块
+      - ./spider_xhs:/app/spider_xhs:ro
+    env_file:
+      - ./backend/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/spider_xhs
+    restart: unless-stopped
+
+  # 前端界面
+  hongxin-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: hongxin-web
+    ports:
+      - "80:80"
+    depends_on:
+      - hongxin-api
+    restart: unless-stopped
+
+volumes:
+  output:
+  data:
