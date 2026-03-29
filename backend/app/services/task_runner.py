@@ -49,10 +49,11 @@ class TaskRunner:
         user_prompt: str = "",
         image_model: str = "nano-banana-2",
         image_ratio: str = "3:4",
-        vision_model: str = "glm-4.6v-flash"
+        vision_model: str = "glm-4.6v-flash",
+        image_style_id: str = "notebook"
     ):
         """执行完整任务流程（供后台任务调用）"""
-        return await self._run_task_async(task, db, image_count, selected_indices, user_prompt, image_model, image_ratio, vision_model)
+        return await self._run_task_async(task, db, image_count, selected_indices, user_prompt, image_model, image_ratio, vision_model, image_style_id)
 
     async def _run_task_async(
         self,
@@ -63,7 +64,8 @@ class TaskRunner:
         user_prompt: str = "",
         image_model: str = "nano-banana-2",
         image_ratio: str = "3:4",
-        vision_model: str = "glm-4.6v-flash"
+        vision_model: str = "glm-4.6v-flash",
+        image_style_id: str = "notebook"
     ):
         if selected_indices is None:
             selected_indices = list(range(image_count))
@@ -129,7 +131,7 @@ class TaskRunner:
             await self._update_status(db, task, TaskStatus.GENERATING, 75, "正在生成图片...")
 
             # 拼接提示词：风格 + 内容
-            style_desc = prompt_config.image_style
+            style_desc = prompt_config.get_image_style(image_style_id)
             content_desc = " ".join(descriptions)
             image_prompt = f"{style_desc}\n\n图片内容：{content_desc}"
 

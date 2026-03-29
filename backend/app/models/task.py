@@ -50,6 +50,7 @@ class Task(Base):
     image_count = Column(Integer, default=1)  # 要处理的图片数量
     image_model = Column(String(50), default="nano-banana-2")  # 图片生成模型
     vision_model = Column(String(50), default="glm-4.6v-flash")  # 视觉分析模型
+    image_style_id = Column(String(30), default="notebook")  # 图片风格ID
     error_message = Column(Text)
 
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -68,6 +69,7 @@ class CreateTaskRequest(BaseModel):
     image_model: Optional[str] = Field(default="nano-banana-2", description="图片生成模型")
     image_ratio: Optional[str] = Field(default="3:4", description="输出图像比例")
     vision_model: Optional[str] = Field(default="glm-4.6v-flash", description="视觉分析模型")
+    image_style_id: Optional[str] = Field(default="notebook", description="图片风格ID (notebook/whiteboard)")
 
 
 class TaskProgress(BaseModel):

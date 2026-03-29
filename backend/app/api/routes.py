@@ -126,7 +126,17 @@ def get_db():
         db.close()
 
 
-def run_task_background(task_id: str, image_count: int, selected_indices: list[int], user_prompt: str, image_model: str, image_ratio: str, vision_model: str):
+@router.get("/image-styles")
+async def get_image_styles():
+    """获取可选的图片风格列表"""
+    from app.config import prompt_config
+    return {
+        "styles": prompt_config.image_styles_list,
+        "default": "notebook"
+    }
+
+
+def run_task_background(task_id: str, image_count: int, selected_indices: list[int], user_prompt: str, image_model: str, image_ratio: str, vision_model: str, image_style_id: str):
     """后台运行任务"""
     import asyncio
 
@@ -139,7 +149,7 @@ def run_task_background(task_id: str, image_count: int, selected_indices: list[i
             asyncio.set_event_loop(loop)
             try:
                 loop.run_until_complete(
-                    task_runner.run_task(task, db, image_count, selected_indices, user_prompt, image_model, image_ratio, vision_model)
+                    task_runner.run_task(task, db, image_count, selected_indices, user_prompt, image_model, image_ratio, vision_model, image_style_id)
                 )
             finally:
                 loop.close()
@@ -173,6 +183,7 @@ async def create_task(
             user_prompt=request.user_prompt,
             image_model=request.image_model,
             vision_model=request.vision_model,
+            image_style_id=request.image_style_id,
         )
         db.add(task)
         db.commit()
@@ -188,7 +199,8 @@ async def create_task(
         request.user_prompt or "",
         request.image_model or "nano-banana-2",
         request.image_ratio or "3:4",
-        request.vision_model or "glm-4.6v-flash"
+        request.vision_model or "glm-4.6v-flash",
+        request.image_style_id or "notebook"
     )
 
     logger.info(f"Created task: {task_id}")

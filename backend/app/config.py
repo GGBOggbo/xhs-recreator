@@ -81,6 +81,22 @@ class PromptConfig:
     def image_style(self) -> str:
         return self._config.get("image_style", "cartoon")
 
+    def get_image_style(self, style_id: str = "notebook") -> str:
+        """根据 style_id 获取对应风格的提示词"""
+        styles = self._config.get("image_styles", [])
+        for s in styles:
+            if s.get("id") == style_id:
+                return self._config.get(s["key"], self.image_style)
+        # fallback to default
+        return self.image_style
+
+    @property
+    def image_styles_list(self) -> list[dict]:
+        """返回可选风格列表"""
+        return self._config.get("image_styles", [
+            {"id": "notebook", "name": "学霸笔记风", "description": "默认风格", "key": "image_style"}
+        ])
+
     @property
     def image_model(self) -> str:
         """图片生成模型"""
