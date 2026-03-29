@@ -48,10 +48,14 @@ async def fetch_note(url: str):
     - 获取标题、文案、标签、图片
     - 返回原始内容供前端预览
     """
-    from app.services.spider import spider_service
     import urllib.parse
 
-    success, msg, note_content = spider_service.fetch_note(url)
+    from app.services.spider import spider_service
+    from app.domain.interfaces import CrawlerProvider
+
+    # 统一入口，路由层只认 provider
+    crawler: CrawlerProvider = spider_service
+    success, msg, note_content = crawler.fetch_note(url)
 
     if not success:
         raise HTTPException(status_code=400, detail=msg)

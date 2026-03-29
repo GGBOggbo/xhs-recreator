@@ -38,8 +38,8 @@ class NoteContent:
     video_url: Optional[str] = None
 
 
-class SpiderService:
-    """爬虫服务"""
+class SpiderXHSAdapter:
+    """爬虫适配器 — 实现 CrawlerProvider 接口，封装 Spider_XHS"""
 
     def __init__(self):
         self.xhs_apis = XHS_Apis()
@@ -184,5 +184,5 @@ class SpiderService:
         return local_paths
 
 
-# 全局实例
-spider_service = SpiderService()
+# 全局实例 — 实现 CrawlerProvider 接口
+spider_service = SpiderXHSAdapter()

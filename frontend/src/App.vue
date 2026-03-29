@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import LinkInput from './components/LinkInput.vue'
+import LandingPage from './components/LandingPage.vue'
 import PreviewConfig from './components/PreviewConfig.vue'
 import ProgressPanel from './components/ProgressPanel.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
@@ -8,7 +9,7 @@ import HistoryList from './components/HistoryList.vue'
 
 // 状态
 const currentTaskId = ref<string>('')
-const currentStep = ref<'input' | 'preview' | 'processing' | 'result' | 'history'>('input')
+const currentStep = ref<'landing' | 'input' | 'preview' | 'processing' | 'result' | 'history'>('landing')
 const originalContent = ref<any>(null)
 const generatedResult = ref<any>(null)
 
@@ -113,6 +114,19 @@ const handleBackToInput = () => {
   originalContent.value = null
 }
 
+// 从落地页进入创作
+const handleStartCreate = () => {
+  currentStep.value = 'input'
+}
+
+// 品牌点击 - 回到落地页
+const handleBrandClick = () => {
+  if (currentStep.value !== 'landing') {
+    handleReset()
+    currentStep.value = 'landing'
+  }
+}
+
 // 重新开始
 const handleReset = () => {
   currentTaskId.value = ''
@@ -133,7 +147,7 @@ const goToHistory = () => {
 
 // 从历史记录返回
 const backFromHistory = () => {
-  currentStep.value = 'input'
+  currentStep.value = 'landing'
 }
 </script>
 
@@ -143,13 +157,20 @@ const backFromHistory = () => {
     <header class="header">
       <div class="header-inner">
         <!-- 左侧品牌 -->
-        <div class="brand" @click="handleReset">红薯创作坊</div>
+        <div class="brand" @click="handleBrandClick">红薯创作坊</div>
 
         <!-- 中间导航 -->
         <nav class="nav-menu">
           <button
             class="nav-item"
-            :class="{ active: currentStep !== 'history' }"
+            :class="{ active: currentStep === 'landing' }"
+            @click="handleBrandClick"
+          >
+            首页
+          </button>
+          <button
+            class="nav-item"
+            :class="{ active: currentStep !== 'landing' && currentStep !== 'history' }"
             @click="handleReset"
           >
             开始创作
@@ -210,6 +231,12 @@ const backFromHistory = () => {
     </header>
 
     <main class="main-content">
+      <!-- 落地页 -->
+      <LandingPage
+        v-if="currentStep === 'landing'"
+        @start-create="handleStartCreate"
+      />
+
       <!-- 历史记录页面 -->
       <template v-if="currentStep === 'history'">
         <div class="history-page">
