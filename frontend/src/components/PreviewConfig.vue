@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import axios from 'axios'
 
 const props = defineProps<{
@@ -15,8 +15,25 @@ const emit = defineEmits<{
 const userPrompt = ref('')
 const imageModel = ref('nano-banana-2')
 const imageRatio = ref('3:4')
+const imageStyleId = ref('notebook')
 const loading = ref(false)
 const error = ref('')
+
+// 风格列表（从后端获取）
+const imageStyles = ref<any[]>([])
+
+onMounted(async () => {
+  try {
+    const res = await axios.get('/api/image-styles')
+    imageStyles.value = res.data.styles || []
+  } catch {
+    // fallback 硬编码
+    imageStyles.value = [
+      { id: 'notebook', name: '学霸笔记风', description: '手绘涂鸦 + 莫兰迪色系' },
+      { id: 'whiteboard', name: '白板纪实风', description: '真实白板 + 干擦记号笔 + 办公室纪实' },
+    ]
+  }
+})
 
 // 图片选择
 const selectedImages = ref<number[]>([])
@@ -84,6 +101,7 @@ const handleStartRecreate = async () => {
       user_prompt: userPrompt.value,
       image_model: imageModel.value,
       image_ratio: imageRatio.value,
+      image_style_id: imageStyleId.value,
     })
 
     emit('start-recreate', response.data.task_id)
@@ -217,6 +235,23 @@ const handleStartRecreate = async () => {
                   </svg>
                   <span class="model-name">{{ opt.label }}</span>
                   <span class="model-desc">{{ opt.desc }}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 风格选择 -->
+            <div class="config-row" v-if="imageStyles.length > 1">
+              <label class="config-label">图片风格</label>
+              <div class="style-grid">
+                <button
+                  v-for="style in imageStyles"
+                  :key="style.id"
+                  class="style-btn"
+                  :class="{ active: imageStyleId === style.id }"
+                  @click="imageStyleId = style.id"
+                >
+                  <span class="style-name">{{ style.name }}</span>
+                  <span class="style-desc">{{ style.description }}</span>
                 </button>
               </div>
             </div>
@@ -674,6 +709,46 @@ const handleStartRecreate = async () => {
   font-size: 10px;
   color: var(--text-muted);
   margin-top: 4px;
+}
+
+/* 风格选择 */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.style-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 10px;
+  background: var(--bg-primary);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.style-btn:hover {
+  border-color: var(--border-color);
+}
+
+.style-btn.active {
+  border-color: var(--primary-color);
+}
+
+.style-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.style-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
 }
 
 /* 比例选择 */
