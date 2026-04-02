@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NODE_OPTIONS=\"--require /usr/local/share/node-v24.11.0-linux-x64/lib/node_modules/global-agent/dist/routines/bootstrap.js\" GLOBAL_AGENT_HTTP_PROXY=http://10.0.0.1:7890 bird --auth-token \"236fad54e7533a2a7b935db0016b2d2364a184c0\" --ct0 \"79dd854708c0fcbd1ad308c7d3555371946960c1d30fe46c1c120a36c87344889a3408785c39161ecb5a1eefa183204c85eeeb5b65d938e8cd983ae0e3d3664618b51388119dea40f303b3bef846de33\" whoami --plain)",
+      "Bash(curl -x http://10.0.0.1:7890 -s -o /dev/null -w \"%{http_code}\" \"https://x.com/i/api/1.1/account/settings.json\" -H \"Cookie: auth_token=236fad54e7533a2a7b935db0016b2d2364a184c0; ct0=79dd854708c0fcbd1ad308c7d3555371946960c1d30fe46c1c120a36c87344889a3408785c39161ecb5a1eefa183204c85eeeb5b65d938e8cd983ae0e3d3664618b51388119dea40f303b3bef846de33\" -H \"Authorization: Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA\" -H \"X-Csrf-Token: 79dd854708c0fcbd1ad308c7d3555371946960c1d30fe46c1c120a36c87344889a3408785c39161ecb5a1eefa183204c85eeeb5b65d938e8cd983ae0e3d3664618b51388119dea40f303b3bef846de33\")",
+      "Bash(curl -x http://10.0.0.1:7890 -s \"https://x.com/i/api/1.1/account/verify_credentials.json\" -H \"Cookie: auth_token=236fad54e7533a2a7b935db0016b2d2364a184c0; ct0=79dd854708c0fcbd1ad308c7d3555371946960c1d30fe46c1c120a36c87344889a3408785c39161ecb5a1eefa183204c85eeeb5b65d938e8cd983ae0e3d3664618b51388119dea40f303b3bef846de33\" -H \"Authorization: Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA\" -H \"X-Csrf-Token: 79dd854708c0fcbd1ad308c7d3555371946960c1d30fe46c1c120a36c87344889a3408785c39161ecb5a1eefa183204c85eeeb5b65d938e8cd983ae0e3d3664618b51388119dea40f303b3bef846de33\")",
+      "Read(//usr/local/share/node-v24.11.0-linux-x64/lib/node_modules/@steipete/bird/**)",
+      "Bash(NODE_OPTIONS=\"--import /root/.config/bird/proxy-preload.mjs\" HTTPS_PROXY=http://10.0.0.1:7890 bird --auth-token \"236fad54e7533a2a7b935db0016b2d2364a184c0\" --ct0 \"79dd854708c0fcbd1ad308c7d3555371946960c1d30fe46c1c120a36c87344889a3408785c39161ecb5a1eefa183204c85eeeb5b65d938e8cd983ae0e3d3664618b51388119dea40f303b3bef846de33\" whoami --plain)",
+      "Read(//usr/local/share/node-v24.11.0-linux-x64/lib/node_modules/undici/**)",
+      "Bash(chmod +x /usr/local/bin/bird-proxy)",
+      "Bash(bird-proxy search:*)",
+      "Bash(bird-proxy read:*)",
+      "Bash(python3 -m json.tool)"
+    ],
+    "additionalDirectories": [
+      "/usr/local/bin"
+    ]
+  }
+}

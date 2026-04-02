@@ -363,8 +363,13 @@ class XHS_Apis():
         try:
             urlParse = urllib.parse.urlparse(url)
             note_id = urlParse.path.split("/")[-1]
-            kvs = urlParse.query.split('&')
-            kvDist = {kv.split('=')[0]: kv.split('=')[1] for kv in kvs}
+            kvDist = {}
+            if urlParse.query:
+                kvs = urlParse.query.split('&')
+                for kv in kvs:
+                    parts = kv.split('=', 1)
+                    if len(parts) == 2:
+                        kvDist[parts[0]] = parts[1]
             api = f"/api/sns/web/v1/feed"
             data = {
                 "source_note_id": note_id,
@@ -376,8 +381,8 @@ class XHS_Apis():
                 "extra": {
                     "need_body_topic": "1"
                 },
-                "xsec_source": kvDist['xsec_source'] if 'xsec_source' in kvDist else "pc_search",
-                "xsec_token": kvDist['xsec_token']
+                "xsec_source": kvDist.get('xsec_source', 'pc_search'),
+                "xsec_token": kvDist.get('xsec_token', '')
             }
             headers, cookies, data = generate_request_params(cookies_str, api, data, 'POST')
             response = requests.post(self.base_url + api, headers=headers, data=data, cookies=cookies, proxies=proxies)
