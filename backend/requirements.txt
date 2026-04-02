@@ -33,3 +33,7 @@ pillow==10.2.0
 retry==0.9.2
 openpyxl==3.1.2
 PyExecJS==1.5.1
+
+# 认证
+PyJWT==2.8.0
+bcrypt==4.1.2

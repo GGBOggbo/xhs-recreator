@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     zhipu_api_key: str = Field(default="", alias="ZHIPU_API_KEY")
     nanobanana_api_key: str = Field(default="", alias="NANOBANANA_API_KEY")
     xhs_cookies: str = Field(default="", alias="XHS_COOKIES")
+    jwt_secret_key: str = Field(default="change-me-in-production", alias="JWT_SECRET_KEY")
 
     # 路径配置
     base_dir: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)

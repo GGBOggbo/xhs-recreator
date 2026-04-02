@@ -73,18 +73,19 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 更新 requirements.txt + rebuild
-- [ ] ____-__-__ __:__ — 生成 JWT_SECRET_KEY 写入 .env
-- [ ] ____-__-__ __:__ — config.py 新增字段
-- [ ] ____-__-__ __:__ — 创建 utils/auth.py
-- [ ] ____-__-__ __:__ — 容器内验证全部函数
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-02 — 更新 requirements.txt（+PyJWT 2.8.0, bcrypt 4.1.2）+ rebuild
+- [x] 2026-04-02 — 生成 JWT_SECRET_KEY 写入 .env
+- [x] 2026-04-02 — config.py 新增 jwt_secret_key 字段
+- [x] 2026-04-02 — 创建 utils/auth.py（4 个函数）
+- [x] 2026-04-02 — Dockerfile 基础镜像换华为云镜像 + apt/pip 换阿里云源
+- [x] 2026-04-02 — 容器内验证全部函数通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | Dockerfile 基础镜像换华为云镜像 | 原 Docker Hub 网络不稳定，构建失败 | 2026-04-02 |
+| D2 | apt/pip 源换阿里云镜像 | 同上，加速国内构建 | 2026-04-02 |
 
 ## Surprises & Discoveries
 
