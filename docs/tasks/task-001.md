@@ -68,22 +68,25 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 阅读现有模型代码
-- [ ] ____-__-__ __:__ — 创建 user.py
-- [ ] ____-__-__ __:__ — 改造 task.py
-- [ ] ____-__-__ __:__ — 注册模型到 app
-- [ ] ____-__-__ __:__ — 执行迁移
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-02 15:05 — 阅读现有模型代码
+- [x] 2026-04-02 15:08 — 创建 user.py
+- [x] 2026-04-02 15:09 — 改造 task.py（加 user_id + ForeignKey）
+- [x] 2026-04-02 15:10 — 注册模型到 __init__.py
+- [x] 2026-04-02 15:14 — 重建 Docker 镜像 + 启动 → users 表自动创建
+- [x] 2026-04-02 15:15 — 手动 ALTER TABLE tasks ADD user_id → 14 条已有数据 user_id=NULL
+- [x] 2026-04-02 15:16 — 验收通过（health check OK，schema 正确）
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | User model 放在独立文件 user.py 而非加在 task.py | 职责分离，后续 auth 接口 import 更清晰 | 2026-04-02 |
+| D2 | user_id 允许 NULL 不设 NOT NULL | 已有 14 条任务无归属，设 NOT NULL 会破坏数据 | 2026-04-02 |
 
 ## Surprises & Discoveries
 
-*（执行过程中记录）*
+- `Base = declarative_base()` 定义在 task.py 中，user.py 需要 `from app.models.task import Base` 来共享同一个 Base 实例。这不是理想的设计（Base 应该在独立的 base.py 中），但改动超出 task-001 范围，后续可优化。
+- Docker 容器代码在 build 时 COPY 进去的，修改本地代码后必须 `docker compose build` + `docker compose up -d`，仅 restart 不会更新代码。
 
 ## Handoff / Resume Notes
 

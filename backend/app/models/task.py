@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, Field
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, create_engine
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -32,6 +32,7 @@ class Task(Base):
     task_id = Column(String(36), unique=True, nullable=False, index=True)
     url = Column(String(512), nullable=False)
     status = Column(String(20), default=TaskStatus.PENDING.value)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     # 原始内容
     original_title = Column(String(255))

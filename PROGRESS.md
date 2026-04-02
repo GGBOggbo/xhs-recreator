@@ -4,7 +4,7 @@
 
 ## Current Phase
 
-**Login System MVP** — 前后端基础设施 + 用户认证 + Cookie 隔离
+**Login System MVP** — Phase 1: Backend Infrastructure（进行中）
 
 ## Task Status
 
@@ -12,7 +12,7 @@
 
 | Task | Name | Status | Notes |
 |------|------|--------|-------|
-| [task-001](docs/tasks/task-001.md) | 数据模型 + DB 迁移 | ⬜ Not started | |
+| [task-001](docs/tasks/task-001.md) | 数据模型 + DB 迁移 | ✅ Done | users 表已创建，tasks 已加 user_id |
 | [task-002](docs/tasks/task-002.md) | JWT + bcrypt 工具 | ⬜ Not started | 可与 001 并行 |
 | [task-003](docs/tasks/task-003.md) | Fernet 加密工具 | ⬜ Not started | 可与 001 并行 |
 | [task-004](docs/tasks/task-004.md) | JWT 中间件 + 路由保护 | ⬜ Not started | 依赖 002 |
