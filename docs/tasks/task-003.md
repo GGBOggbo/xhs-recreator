@@ -67,18 +67,18 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 更新 requirements.txt + rebuild
-- [ ] ____-__-__ __:__ — 生成密钥写入 .env
-- [ ] ____-__-__ __:__ — config.py 新增字段
-- [ ] ____-__-__ __:__ — 创建 utils/crypto.py
-- [ ] ____-__-__ __:__ — 容器内验证
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-03 — 更新 requirements.txt（+cryptography 44.0.2）
+- [x] 2026-04-03 — 生成 Fernet 密钥写入 .env
+- [x] 2026-04-03 — config.py 新增 cookie_encryption_key 字段
+- [x] 2026-04-03 — 创建 utils/crypto.py（2 个函数）
+- [x] 2026-04-03 — 容器内验证全部验收标准通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | cryptography 版本 44.0.2 | 当前最新稳定版 | 2026-04-03 |
+| D2 | Fernet 实例在模块级别创建 | 密钥不变，避免重复初始化 | 2026-04-03 |
 
 ## Surprises & Discoveries
 

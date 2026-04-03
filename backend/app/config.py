@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     nanobanana_api_key: str = Field(default="", alias="NANOBANANA_API_KEY")
     xhs_cookies: str = Field(default="", alias="XHS_COOKIES")
     jwt_secret_key: str = Field(default="change-me-in-production", alias="JWT_SECRET_KEY")
+    cookie_encryption_key: str = Field(default="change-me-in-production", alias="COOKIE_ENCRYPTION_KEY")
 
     # 路径配置
     base_dir: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)
