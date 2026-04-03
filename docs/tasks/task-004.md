@@ -70,17 +70,18 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 阅读现有路由代码
-- [ ] ____-__-__ __:__ — 创建 middleware/auth.py
-- [ ] ____-__-__ __:__ — 改造 routes.py 加依赖注入
-- [ ] ____-__-__ __:__ — curl 测试全部场景
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-03 — 阅读现有路由代码（7 个路由函数）
+- [x] 2026-04-03 — 创建 middleware/auth.py（OAuth2PasswordBearer + get_current_user）
+- [x] 2026-04-03 — 改造 routes.py，全部 7 个路由加 Depends(get_current_user)
+- [x] 2026-04-03 — curl 测试 4 个场景全部通过
+- [x] 2026-04-03 — 验收通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | /proxy-image 和 /image-styles 也加鉴权 | task-004 明确白名单仅 /api/auth/* | 2026-04-03 |
+| D2 | auth 路由不在 routes.py 中，由 task-005 单独创建 | 避免当前 task 涉及 auth 接口逻辑 | 2026-04-03 |
 
 ## Surprises & Discoveries
 

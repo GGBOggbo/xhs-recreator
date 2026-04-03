@@ -15,7 +15,7 @@
 | [task-001](docs/tasks/task-001.md) | 数据模型 + DB 迁移 | ✅ Done | users 表已创建，tasks 已加 user_id |
 | [task-002](docs/tasks/task-002.md) | JWT + bcrypt 工具 | ✅ Done | 4 函数验证通过，Dockerfile 换国内镜像源 |
 | [task-003](docs/tasks/task-003.md) | Fernet 加密工具 | ✅ Done | encrypt/decrypt_cookie 验证通过 |
-| [task-004](docs/tasks/task-004.md) | JWT 中间件 + 路由保护 | ⬜ Not started | 依赖 002 |
+| [task-004](docs/tasks/task-004.md) | JWT 中间件 + 路由保护 | ✅ Done | 7 个路由全部加鉴权，curl 验证通过 |
 
 ### Phase 2: Backend Business
 

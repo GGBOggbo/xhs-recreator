@@ -6,7 +6,7 @@ import uuid
 from typing import Optional
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Query, BackgroundTasks, Depends
 from loguru import logger
 from sqlalchemy import desc
 
@@ -24,6 +24,7 @@ from app.models.task import (
     create_engine,
 )
 from app.services.task_runner import task_runner
+from app.middleware.auth import get_current_user
 
 router = APIRouter()
 
@@ -41,7 +42,7 @@ Base.metadata.create_all(bind=engine)
 
 
 @router.get("/fetch")
-async def fetch_note(url: str):
+async def fetch_note(url: str, user: dict = Depends(get_current_user)):
     """
     只爬取笔记内容，不执行二创
 
@@ -87,7 +88,7 @@ async def fetch_note(url: str):
 
 
 @router.get("/proxy-image")
-async def proxy_image(url: str):
+async def proxy_image(url: str, user: dict = Depends(get_current_user)):
     """
     代理图片请求，绕过防盗链
 
@@ -127,7 +128,7 @@ def get_db():
 
 
 @router.get("/image-styles")
-async def get_image_styles():
+async def get_image_styles(user: dict = Depends(get_current_user)):
     """获取可选的图片风格列表"""
     from app.config import prompt_config
     return {
@@ -160,7 +161,8 @@ def run_task_background(task_id: str, image_count: int, selected_indices: list[i
 @router.post("/task", response_model=TaskResponse)
 async def create_task(
     request: CreateTaskRequest,
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    user: dict = Depends(get_current_user),
 ):
     """
     创建新任务
@@ -213,7 +215,7 @@ async def create_task(
 
 
 @router.get("/task/{task_id}")
-async def get_task(task_id: str):
+async def get_task(task_id: str, user: dict = Depends(get_current_user)):
     """获取任务详情"""
     db = SessionLocal()
     try:
@@ -261,6 +263,7 @@ async def get_history(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=20, ge=1, le=100),
     status: Optional[TaskStatus] = None,
+    user: dict = Depends(get_current_user),
 ):
     """获取历史记录"""
     db = SessionLocal()
@@ -293,7 +296,7 @@ async def get_history(
 
 
 @router.delete("/task/{task_id}")
-async def delete_task(task_id: str):
+async def delete_task(task_id: str, user: dict = Depends(get_current_user)):
     """删除任务"""
     db = SessionLocal()
     try:
