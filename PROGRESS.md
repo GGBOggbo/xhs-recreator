@@ -4,7 +4,7 @@
 
 ## Current Phase
 
-**Login System MVP** — Phase 3: Frontend Infrastructure（进行中）
+**Login System MVP** — ✅ 全部完成
 
 ## Task Status
 
@@ -43,7 +43,7 @@
 
 | Task | Name | Status | Notes |
 |------|------|--------|-------|
-| [task-012](docs/tasks/task-012.md) | 集成验收 | ⬜ Not started | 人工操作 |
+| [task-012](docs/tasks/task-012.md) | 集成验收 | ✅ Done | MVP 全部验收通过 |
 
 ## Next Steps
 
