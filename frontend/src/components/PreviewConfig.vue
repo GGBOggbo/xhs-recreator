@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import axios from 'axios'
+import { api } from '../utils/auth'
 
 const props = defineProps<{
   content: any
@@ -24,7 +24,7 @@ const imageStyles = ref<any[]>([])
 
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/image-styles')
+    const res = await api.get('/api/image-styles')
     imageStyles.value = res.data.styles || []
   } catch {
     // fallback 硬编码
@@ -94,7 +94,7 @@ const handleStartRecreate = async () => {
   error.value = ''
 
   try {
-    const response = await axios.post('/api/task', {
+    const response = await api.post('/api/task', {
       url: props.content.url,
       image_count: selectedImages.value.length,
       selected_indices: selectedImages.value,

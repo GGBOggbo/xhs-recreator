@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import axios from 'axios'
+import { api } from '../utils/auth'
 
 const props = defineProps<{
   taskId: string
@@ -61,7 +61,7 @@ function getStepStatus(stepName: string): string {
 // 获取完整任务结果
 const fetchTaskResult = async () => {
   try {
-    const response = await axios.get(`/api/task/${props.taskId}`)
+    const response = await api.get(`/api/task/${props.taskId}`)
     return response.data
   } catch (e) {
     console.error('Failed to fetch task result:', e)

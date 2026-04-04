@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import axios from 'axios'
+import { api } from '../utils/auth'
 
 const emit = defineEmits<{
   (e: 'fetched', content: any): void
@@ -26,7 +26,7 @@ const handleFetch = async () => {
   error.value = ''
 
   try {
-    const response = await axios.get('/api/fetch', {
+    const response = await api.get('/api/fetch', {
       params: { url: url.value }
     })
 

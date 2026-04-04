@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { api } from '../utils/auth'
 
 interface HistoryItem {
   task_id: string
@@ -29,7 +29,7 @@ const statusText: Record<string, string> = {
 const fetchHistory = async () => {
   loading.value = true
   try {
-    const response = await axios.get('/api/history', {
+    const response = await api.get('/api/history', {
       params: { page: 1, page_size: 10 },
     })
     history.value = response.data.items
