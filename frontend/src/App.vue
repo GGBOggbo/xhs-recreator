@@ -205,7 +205,7 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
           <button
             class="nav-item"
             :class="{ active: currentStep !== 'landing' && currentStep !== 'history' }"
-            @click="handleReset"
+            @click="handleStartCreate"
           >
             开始创作
           </button>
