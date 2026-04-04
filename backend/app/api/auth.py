@@ -141,7 +141,7 @@ async def check_cookie(user: dict = Depends(get_current_user), db: Session = Dep
     cookies_plain = decrypt_cookie(db_user.xhs_cookies_encrypted)
 
     from app.services.spider import spider_service
-    test_url = "https://www.xiaohongshu.com/explore/67c10a0b000000000d038a3f"
+    test_url = "https://www.xiaohongshu.com/explore/696f42ff000000002103095d"
     success, msg, _ = spider_service.fetch_note(test_url, cookies=cookies_plain)
 
     if success:
