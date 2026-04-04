@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import LinkInput from './components/LinkInput.vue'
 import LandingPage from './components/LandingPage.vue'
 import LoginPage from './components/LoginPage.vue'
@@ -8,7 +8,7 @@ import PreviewConfig from './components/PreviewConfig.vue'
 import ProgressPanel from './components/ProgressPanel.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import HistoryList from './components/HistoryList.vue'
-import { isAuthenticated } from './utils/auth'
+import { isAuthenticated, getCurrentUser, logout } from './utils/auth'
 
 // 状态
 const currentTaskId = ref<string>('')
@@ -18,6 +18,14 @@ const generatedResult = ref<any>(null)
 
 // 夜间模式
 const isDarkMode = ref(false)
+
+// 当前用户名
+const currentUser = computed(() => getCurrentUser())
+const displayUsername = computed(() => {
+  const name = currentUser.value?.username as string
+  if (!name) return ''
+  return name.length > 6 ? name.slice(0, 6) + '...' : name
+})
 
 // 初始化 - 恢复页面状态
 onMounted(() => {
@@ -204,11 +212,10 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
           </button>
         </nav>
 
-        <!-- 右侧图标 -->
+        <!-- 右侧操作区 -->
         <div class="header-actions">
           <!-- 夜间模式切换 -->
           <button class="header-icon-btn theme-toggle" :title="isDarkMode ? '切换日间模式' : '切换夜间模式'" @click="toggleDarkMode">
-            <!-- 太阳图标 (日间模式显示) -->
             <svg v-if="!isDarkMode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="5"/>
               <line x1="12" y1="1" x2="12" y2="3"/>
@@ -220,29 +227,27 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
               <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
             </svg>
-            <!-- 月亮图标 (夜间模式显示) -->
             <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
             </svg>
           </button>
-          <button class="header-icon-btn" title="设置">
+          <!-- 用户名 -->
+          <span class="username">{{ displayUsername }}</span>
+          <!-- 设置按钮 -->
+          <button class="header-icon-btn" title="Cookie 设置" @click="currentStep = 'settings'">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"/>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
             </svg>
           </button>
-          <button class="header-icon-btn help-btn" title="帮助">
+          <!-- 注销按钮 -->
+          <button class="header-icon-btn logout-btn" title="退出登录" @click="logout()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <line x1="12" y1="17" x2="12.01" y2="17"/>
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
             </svg>
           </button>
-          <div class="avatar">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
-          </div>
         </div>
       </div>
     </header>
@@ -370,15 +375,6 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
   background: #1C1B1B;
   color: #E5E2E1;
   opacity: 1;
-}
-
-.dark-mode .help-btn {
-  background: #1C1B1B;
-}
-
-.dark-mode .avatar {
-  background: #2A2A2A;
-  color: #E5E2E1;
 }
 
 .dark-mode::before {
@@ -529,25 +525,36 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
   color: #E5E2E1;
 }
 
-.help-btn {
-  background: #F3F4F6;
+.username {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #FEF3C7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #D97706;
-  transition: background 0.3s ease, color 0.3s ease;
+.dark-mode .username {
+  color: #D1D5DB;
 }
 
-.avatar svg {
-  width: 20px;
-  height: 20px;
+.logout-btn {
+  color: #9CA3AF;
+}
+
+.logout-btn:hover {
+  color: #EF4444;
+  background: #FEF2F2;
+}
+
+.dark-mode .logout-btn {
+  color: #6B7280;
+}
+
+.dark-mode .logout-btn:hover {
+  color: #F87171;
+  background: #7F1D1D;
 }
 
 .main-content {
@@ -641,6 +648,10 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
 
   /* 移动端隐藏部分导航 */
   .nav-item:nth-child(3) {
+    display: none;
+  }
+
+  .username {
     display: none;
   }
 

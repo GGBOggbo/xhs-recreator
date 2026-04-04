@@ -37,7 +37,7 @@
 |------|------|--------|-------|
 | [task-009](docs/tasks/task-009.md) | 登录/注册页 | ✅ Done | LoginPage + App.vue 登录态集成 |
 | [task-010](docs/tasks/task-010.md) | 设置页 | ✅ Done | Cookie 配置 + 有效性检测 |
-| [task-011](docs/tasks/task-011.md) | 导航栏改造 | ⬜ Not started | 需拍板布局 |
+| [task-011](docs/tasks/task-011.md) | 导航栏改造 | ✅ Done | 用户名 + 设置入口 + 注销 |
 
 ### Phase 5: Integration
 
