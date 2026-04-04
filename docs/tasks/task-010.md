@@ -78,21 +78,26 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 创建 SettingsPage.vue 静态页面
-- [ ] ____-__-__ __:__ — 接入 saveCookie
-- [ ] ____-__-__ __:__ — 接入 checkCookie
-- [ ] ____-__-__ __:__ — 加 loading + 错误处理
-- [ ] ____-__-__ __:__ — App.vue 注册 settings 状态
-- [ ] ____-__-__ __:__ — 测试
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-04 06:35 — 创建 SettingsPage.vue（Cookie 输入 + 引导文案 + 状态展示）
+- [x] 2026-04-04 06:35 — 接入 saveCookie API
+- [x] 2026-04-04 06:35 — 接入 checkCookie API
+- [x] 2026-04-04 06:35 — 加 loading + 错误处理
+- [x] 2026-04-04 06:35 — App.vue 替换占位为 SettingsPage 组件
+- [x] 2026-04-04 06:35 — Docker 构建通过
+- [x] 2026-04-04 06:35 — 验收通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | 使用卡片式布局（600px 居中） | 与 LoginPage 风格一致 | 2026-04-04 |
+| D2 | onMounted 自动调用 getCookieStatus | 进入页面即显示当前 Cookie 配置状态 | 2026-04-04 |
+| D3 | 状态分 4 种：none/saved/valid/invalid | 覆盖所有场景，用户一目了然 | 2026-04-04 |
+| D4 | 保存后清空 textarea | 避免明文 Cookie 残留页面 | 2026-04-04 |
 
 ## Surprises & Discoveries
+
+- App.vue 中 settings 状态已在 task-009 中注册，无需重复添加
 
 ## Handoff / Resume Notes
 

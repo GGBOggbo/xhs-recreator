@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import LinkInput from './components/LinkInput.vue'
 import LandingPage from './components/LandingPage.vue'
 import LoginPage from './components/LoginPage.vue'
+import SettingsPage from './components/SettingsPage.vue'
 import PreviewConfig from './components/PreviewConfig.vue'
 import ProgressPanel from './components/ProgressPanel.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
@@ -253,11 +254,11 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
         @login-success="handleLoginSuccess"
       />
 
-      <!-- 设置页占位（task-010 实现） -->
-      <div v-else-if="currentStep === 'settings'" class="settings-placeholder">
-        <p>设置页（task-010 实现中...）</p>
-        <button class="back-btn" @click="currentStep = 'landing'">进入首页</button>
-      </div>
+      <!-- 设置页 -->
+      <SettingsPage
+        v-else-if="currentStep === 'settings'"
+        @go-back="currentStep = 'landing'"
+      />
 
       <template v-else>
       <!-- 落地页 -->
@@ -613,30 +614,6 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
 
 .dark-mode .page-title {
   color: #FFFFFF;
-}
-
-/* 设置页占位 */
-.settings-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 72px);
-  gap: 16px;
-  color: #9CA3AF;
-}
-
-.settings-placeholder p {
-  font-size: 16px;
-  margin: 0;
-}
-
-.settings-placeholder .back-btn {
-  display: inline-flex;
-}
-
-.dark-mode .settings-placeholder {
-  color: #6B7280;
 }
 
 /* 响应式 */
