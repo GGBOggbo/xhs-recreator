@@ -23,7 +23,7 @@
 |------|------|--------|-------|
 | [task-005](docs/tasks/task-005.md) | 注册/登录/Me 接口 | ✅ Done | 3 接口 + 12 项验收全通过 |
 | [task-006](docs/tasks/task-006.md) | Cookie 管理接口 | ✅ Done | GET/PUT/POST cookie，9 项验收通过 |
-| [task-007](docs/tasks/task-007.md) | 任务用户绑定 | ⬜ Not started | 依赖 004+005 |
+| [task-007](docs/tasks/task-007.md) | 任务用户绑定 | ✅ Done | 7 项验收全通过，用户隔离生效 |
 
 ### Phase 3: Frontend Infrastructure
 

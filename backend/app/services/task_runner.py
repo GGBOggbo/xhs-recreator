@@ -50,10 +50,11 @@ class TaskRunner:
         image_model: str = "nano-banana-2",
         image_ratio: str = "3:4",
         vision_model: str = "glm-4.6v-flash",
-        image_style_id: str = "notebook"
+        image_style_id: str = "notebook",
+        cookies_plain: str = "",
     ):
         """执行完整任务流程（供后台任务调用）"""
-        return await self._run_task_async(task, db, image_count, selected_indices, user_prompt, image_model, image_ratio, vision_model, image_style_id)
+        return await self._run_task_async(task, db, image_count, selected_indices, user_prompt, image_model, image_ratio, vision_model, image_style_id, cookies_plain)
 
     async def _run_task_async(
         self,
@@ -65,7 +66,8 @@ class TaskRunner:
         image_model: str = "nano-banana-2",
         image_ratio: str = "3:4",
         vision_model: str = "glm-4.6v-flash",
-        image_style_id: str = "notebook"
+        image_style_id: str = "notebook",
+        cookies_plain: str = "",
     ):
         if selected_indices is None:
             selected_indices = list(range(image_count))
@@ -75,7 +77,7 @@ class TaskRunner:
             # ========== Phase 1: 爬取内容 ==========
             await self._update_status(db, task, TaskStatus.FETCHING, 5, "正在获取笔记内容...")
 
-            note_data, selected_images = await fetch_note_step(self.crawler, task.url, selected_indices)
+            note_data, selected_images = await fetch_note_step(self.crawler, task.url, selected_indices, cookies=cookies_plain)
 
             # 保存爬取结果到 DB
             task.original_title = note_data.title
