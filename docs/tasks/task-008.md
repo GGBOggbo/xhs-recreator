@@ -77,18 +77,20 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 阅读现有 API 调用方式
-- [ ] ____-__-__ __:__ — 实现 Token 管理函数
-- [ ] ____-__-__ __:__ — 创建 axios 拦截器
-- [ ] ____-__-__ __:__ — 封装 auth API
-- [ ] ____-__-__ __:__ — 确认现有组件兼容
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-04 — 阅读现有 API 调用方式（4 组件直接 import axios）
+- [x] 2026-04-04 — 实现 Token 管理函数（getToken/setToken/login/logout 等）
+- [x] 2026-04-04 — 创建 axios 拦截器（请求自动带 Token，401 自动清 Token）
+- [x] 2026-04-04 — 封装 auth API（register/login/getMe/saveCookie/checkCookie/getCookieStatus）
+- [x] 2026-04-04 — 确认现有组件兼容（api 导出可直接替换现有 import axios）
+- [x] 2026-04-04 — 验收通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | authApi.register/login 用原始 axios 而非 api 实例 | 注册登录不需要 Token | 2026-04-04 |
+| D2 | 401 拦截直接 reload 而非跳转 | 无 vue-router，reload 后 App.vue 检查无 Token 显示登录页 | 2026-04-04 |
+| D3 | 不修改现有组件的 import | 仅提供 api 导出，后续 task-009~011 逐步迁移 | 2026-04-04 |
 
 ## Surprises & Discoveries
 

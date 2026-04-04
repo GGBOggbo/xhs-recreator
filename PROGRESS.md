@@ -4,7 +4,7 @@
 
 ## Current Phase
 
-**Login System MVP** — Phase 2: Backend Business（进行中）
+**Login System MVP** — Phase 3: Frontend Infrastructure（进行中）
 
 ## Task Status
 
@@ -29,7 +29,7 @@
 
 | Task | Name | Status | Notes |
 |------|------|--------|-------|
-| [task-008](docs/tasks/task-008.md) | 前端 auth 基础 | ⬜ Not started | 可与 Phase 2 并行 |
+| [task-008](docs/tasks/task-008.md) | 前端 auth 基础 | ✅ Done | Token 管理 + 拦截器 + authApi |
 
 ### Phase 4: Frontend Pages
 
