@@ -8,7 +8,7 @@ from typing import Optional
 from loguru import logger
 
 
-async def fetch_note_step(crawler, url: str, selected_indices: list[int]):
+async def fetch_note_step(crawler, url: str, selected_indices: list[int], cookies_plain: str = ""):
     """
     Phase 1: 爬取笔记内容
 
@@ -17,7 +17,7 @@ async def fetch_note_step(crawler, url: str, selected_indices: list[int]):
     Raises:
         Exception: 爬取失败时抛出
     """
-    success, msg, note_data = crawler.fetch_note(url)
+    success, msg, note_data = crawler.fetch_note(url, cookies=cookies)
     if not success:
         raise Exception(f"获取笔记失败: {msg}")
     if not note_data:
