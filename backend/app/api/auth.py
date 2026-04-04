@@ -1,5 +1,5 @@
 """
-认证路由 — 注册 / 登录 / Me
+认证路由 — 注册 / 登录 / Me / Cookie 管理
 """
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.middleware.auth import get_current_user
 from app.models.user import User
 from app.utils.auth import hash_password, verify_password, create_token
+from app.utils.crypto import encrypt_cookie, decrypt_cookie
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -96,3 +97,54 @@ async def me(user: dict = Depends(get_current_user), db: Session = Depends(_get_
             "created_at": db_user.created_at.isoformat() if db_user.created_at else None,
         },
     }
+
+
+# ---------- Cookie 管理 ----------
+
+class CookieRequest(BaseModel):
+    cookies: str
+
+
+@router.get("/cookie")
+async def get_cookie_status(user: dict = Depends(get_current_user), db: Session = Depends(_get_db)):
+    db_user = db.query(User).filter(User.id == user["user_id"]).first()
+    if not db_user:
+        raise HTTPException(status_code=401, detail="用户不存在")
+
+    return {"success": True, "data": {"has_cookie": db_user.xhs_cookies_encrypted is not None}}
+
+
+@router.put("/cookie")
+async def save_cookie(req: CookieRequest, user: dict = Depends(get_current_user), db: Session = Depends(_get_db)):
+    if not req.cookies or not req.cookies.strip():
+        raise HTTPException(status_code=400, detail="Cookie 不能为空")
+
+    db_user = db.query(User).filter(User.id == user["user_id"]).first()
+    if not db_user:
+        raise HTTPException(status_code=401, detail="用户不存在")
+
+    db_user.xhs_cookies_encrypted = encrypt_cookie(req.cookies.strip())
+    db.commit()
+
+    return {"success": True, "message": "Cookie 保存成功"}
+
+
+@router.post("/cookie/check")
+async def check_cookie(user: dict = Depends(get_current_user), db: Session = Depends(_get_db)):
+    db_user = db.query(User).filter(User.id == user["user_id"]).first()
+    if not db_user:
+        raise HTTPException(status_code=401, detail="用户不存在")
+
+    if not db_user.xhs_cookies_encrypted:
+        raise HTTPException(status_code=400, detail="未配置 Cookie，请先保存后再检测")
+
+    cookies_plain = decrypt_cookie(db_user.xhs_cookies_encrypted)
+
+    from app.services.spider import spider_service
+    test_url = "https://www.xiaohongshu.com/explore/67c10a0b000000000d038a3f"
+    success, msg, _ = spider_service.fetch_note(test_url, cookies=cookies_plain)
+
+    if success:
+        return {"success": True, "data": {"valid": True, "message": "Cookie 有效"}}
+    else:
+        return {"success": True, "data": {"valid": False, "message": "Cookie 已过期，请重新获取"}}

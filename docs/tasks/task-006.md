@@ -79,18 +79,19 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 定义 Pydantic 模型
-- [ ] ____-__-__ __:__ — 实现 GET /cookie
-- [ ] ____-__-__ __:__ — 实现 PUT /cookie
-- [ ] ____-__-__ __:__ — 实现 POST /cookie/check
-- [ ] ____-__-__ __:__ — curl 测试
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-04 — 定义 CookieRequest Pydantic 模型
+- [x] 2026-04-04 — 实现 GET /cookie（查询状态）
+- [x] 2026-04-04 — 实现 PUT /cookie（加密保存）
+- [x] 2026-04-04 — 实现 POST /cookie/check（Spider 调用检测）
+- [x] 2026-04-04 — curl 测试全部 9 项验收标准通过
+- [x] 2026-04-04 — 验收通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | Cookie check 使用 spider_service.fetch_note | 调用真实 API 检测，最可靠 | 2026-04-04 |
+| D2 | check 接口使用固定测试笔记 URL | 需要一个已知存在的笔记 ID | 2026-04-04 |
 
 ## Surprises & Discoveries
 
