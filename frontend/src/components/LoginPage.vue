@@ -4,6 +4,7 @@ import { authApi, login as authLogin } from '../utils/auth'
 
 const emit = defineEmits<{
   (e: 'login-success', data: { has_cookie: boolean }): void
+  (e: 'close'): void
 }>()
 
 const mode = ref<'login' | 'register'>('login')
@@ -58,6 +59,13 @@ const handleSubmit = async () => {
 <template>
   <div class="login-page">
     <div class="login-card">
+      <!-- 关闭按钮 -->
+      <button class="login-close-btn" @click="emit('close')" title="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
       <!-- 品牌标识 -->
       <div class="login-brand">
         <h1 class="login-title">红薯创作坊</h1>
@@ -153,6 +161,13 @@ const handleSubmit = async () => {
   justify-content: center;
   min-height: calc(100vh - 72px);
   padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
 }
 
 .login-card {
@@ -162,6 +177,39 @@ const handleSubmit = async () => {
   border-radius: 16px;
   padding: 40px 32px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.login-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9CA3AF;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.login-close-btn:hover {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.login-close-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.dark-mode .login-close-btn:hover {
+  background: #2A2A2A;
+  color: #E5E2E1;
 }
 
 .dark-mode .login-card {

@@ -12,7 +12,7 @@ import { isAuthenticated, getCurrentUser, logout } from './utils/auth'
 
 // 状态
 const currentTaskId = ref<string>('')
-const currentStep = ref<'login' | 'landing' | 'input' | 'preview' | 'processing' | 'result' | 'history' | 'settings'>('login')
+const currentStep = ref<'login' | 'landing' | 'input' | 'preview' | 'processing' | 'result' | 'history' | 'settings'>('landing')
 const originalContent = ref<any>(null)
 const generatedResult = ref<any>(null)
 
@@ -29,24 +29,23 @@ const displayUsername = computed(() => {
 
 // 初始化 - 恢复页面状态
 onMounted(() => {
-  // 检查登录态：已登录 → 恢复上次页面，未登录 → 登录页
-  if (isAuthenticated()) {
-    const savedStep = sessionStorage.getItem('xhs_step')
-    if (savedStep && savedStep !== 'login') {
-      currentStep.value = savedStep as any
-    } else {
-      currentStep.value = 'landing'
-    }
-  } else {
-    currentStep.value = 'login'
-    return // 未登录不恢复其他状态
-  }
-
   // 恢复夜间模式
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme === 'dark') {
     isDarkMode.value = true
     document.documentElement.classList.add('dark')
+  }
+
+  // 始终从 landing 开始，除非已登录且上次在创作流程中
+  if (isAuthenticated()) {
+    const savedStep = sessionStorage.getItem('xhs_step')
+    if (savedStep && ['input', 'preview', 'processing', 'result', 'settings'].includes(savedStep)) {
+      currentStep.value = savedStep as any
+    } else {
+      currentStep.value = 'landing'
+    }
+  } else {
+    currentStep.value = 'landing'
   }
 
   // 恢复页面状态
@@ -134,9 +133,18 @@ const handleBackToInput = () => {
   originalContent.value = null
 }
 
-// 从落地页进入创作
+// 从落地页进入创作 - 需要检查登录态
+const showLoginPage = ref(false)
 const handleStartCreate = () => {
-  currentStep.value = 'input'
+  if (isAuthenticated()) {
+    currentStep.value = 'input'
+  } else {
+    showLoginPage.value = true
+  }
+}
+
+const closeLoginPage = () => {
+  showLoginPage.value = false
 }
 
 // 品牌点击 - 回到落地页
@@ -172,14 +180,15 @@ const backFromHistory = () => {
 
 // 登录成功处理
 const handleLoginSuccess = (data: { has_cookie: boolean }) => {
-  currentStep.value = data.has_cookie ? 'landing' : 'settings'
+  showLoginPage.value = false
+  currentStep.value = 'input'
 }
 </script>
 
 <template>
   <div class="app" :class="{ 'dark-mode': isDarkMode }">
-    <!-- 顶部导航栏（登录页隐藏） -->
-    <header v-if="currentStep !== 'login'" class="header">
+    <!-- 顶部导航栏 -->
+    <header class="header">
       <div class="header-inner">
         <!-- 左侧品牌 -->
         <div class="brand" @click="handleBrandClick">红薯创作坊</div>
@@ -231,32 +240,36 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
             </svg>
           </button>
-          <!-- 用户名 -->
-          <span class="username">{{ displayUsername }}</span>
-          <!-- 设置按钮 -->
-          <button class="header-icon-btn" title="Cookie 设置" @click="currentStep = 'settings'">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
+          <!-- 未登录：显示登录按钮 -->
+          <button v-if="!isAuthenticated()" class="login-header-btn" @click="showLoginPage = true">
+            登录
           </button>
-          <!-- 注销按钮 -->
-          <button class="header-icon-btn logout-btn" title="退出登录" @click="logout()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-          </button>
+          <!-- 已登录：用户名 + 设置 + 注销 -->
+          <template v-else>
+            <span class="username">{{ displayUsername }}</span>
+            <button class="header-icon-btn" title="Cookie 设置" @click="currentStep = 'settings'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </button>
+            <button class="header-icon-btn logout-btn" title="退出登录" @click="logout()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </template>
         </div>
       </div>
     </header>
 
     <main class="main-content">
-      <!-- 登录页 -->
-      <LoginPage
-        v-if="currentStep === 'login'"
-        @login-success="handleLoginSuccess"
+      <!-- 落地页（始终显示） -->
+      <LandingPage
+        v-if="currentStep === 'landing'"
+        @start-create="handleStartCreate"
       />
 
       <!-- 设置页 -->
@@ -265,15 +278,8 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
         @go-back="currentStep = 'landing'"
       />
 
-      <template v-else>
-      <!-- 落地页 -->
-      <LandingPage
-        v-if="currentStep === 'landing'"
-        @start-create="handleStartCreate"
-      />
-
       <!-- 历史记录页面 -->
-      <template v-if="currentStep === 'history'">
+      <template v-else-if="currentStep === 'history'">
         <div class="history-page">
           <div class="history-page-header">
             <button class="back-btn" @click="backFromHistory">
@@ -290,7 +296,7 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
       </template>
 
       <!-- 主流程页面 -->
-      <template v-else>
+      <template v-else-if="currentStep === 'input' || currentStep === 'preview' || currentStep === 'processing' || currentStep === 'result'">
         <!-- Step 1: 输入链接 -->
         <LinkInput
           v-if="currentStep === 'input'"
@@ -322,7 +328,13 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
           @reset="handleReset"
         />
       </template>
-      </template>
+
+      <!-- 登录弹窗 -->
+      <LoginPage
+        v-if="showLoginPage"
+        @login-success="handleLoginSuccess"
+        @close="closeLoginPage"
+      />
     </main>
   </div>
 </template>
@@ -537,6 +549,30 @@ const handleLoginSuccess = (data: { has_cookie: boolean }) => {
 
 .dark-mode .username {
   color: #D1D5DB;
+}
+
+.login-header-btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: #E60023;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-header-btn:hover {
+  background: #CC001F;
+}
+
+.dark-mode .login-header-btn {
+  background: #FE2C55;
+}
+
+.dark-mode .login-header-btn:hover {
+  background: #EF1139;
 }
 
 .logout-btn {
