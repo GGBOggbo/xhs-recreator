@@ -10,6 +10,7 @@ from loguru import logger
 
 from app.config import settings
 from app.api.routes import router as api_router
+from app.api.auth import router as auth_router
 from app.api.websocket import router as ws_router
 
 # 确保目录在模块加载时就存在（静态文件挂载需要）
@@ -53,6 +54,7 @@ app.add_middleware(
 app.mount("/output", StaticFiles(directory=str(settings.output_dir)), name="output")
 
 # 注册路由
+app.include_router(auth_router, prefix="/api")
 app.include_router(api_router, prefix="/api")
 app.include_router(ws_router, prefix="/ws")
 

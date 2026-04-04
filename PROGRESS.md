@@ -4,7 +4,7 @@
 
 ## Current Phase
 
-**Login System MVP** — Phase 1: Backend Infrastructure（进行中）
+**Login System MVP** — Phase 2: Backend Business（进行中）
 
 ## Task Status
 
@@ -21,7 +21,7 @@
 
 | Task | Name | Status | Notes |
 |------|------|--------|-------|
-| [task-005](docs/tasks/task-005.md) | 注册/登录/Me 接口 | ⬜ Not started | 依赖 001+002 |
+| [task-005](docs/tasks/task-005.md) | 注册/登录/Me 接口 | ✅ Done | 3 接口 + 12 项验收全通过 |
 | [task-006](docs/tasks/task-006.md) | Cookie 管理接口 | ⬜ Not started | 依赖 003+005 |
 | [task-007](docs/tasks/task-007.md) | 任务用户绑定 | ⬜ Not started | 依赖 004+005 |
 

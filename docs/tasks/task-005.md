@@ -88,19 +88,21 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 定义 Pydantic 模型
-- [ ] ____-__-__ __:__ — 实现 register
-- [ ] ____-__-__ __:__ — 实现 login
-- [ ] ____-__-__ __:__ — 实现 me
-- [ ] ____-__-__ __:__ — 注册路由到 main.py
-- [ ] ____-__-__ __:__ — curl 测试
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-04 — 定义 Pydantic 模型（RegisterRequest, LoginRequest）
+- [x] 2026-04-04 — 实现 register（含首个用户自动 admin）
+- [x] 2026-04-04 — 实现 login（含 has_cookie 字段）
+- [x] 2026-04-04 — 实现 me（依赖 get_current_user）
+- [x] 2026-04-04 — 注册路由到 main.py（auth_router 优先于 api_router）
+- [x] 2026-04-04 — curl 测试全部 12 项验收标准通过
+- [x] 2026-04-04 — 验收通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | auth_router 注册在 api_router 之前 | 确保 /api/auth/* 优先匹配 | 2026-04-04 |
+| D2 | 无 Token 时返回 OAuth2 默认 "Not authenticated" | 缺少 Token vs 过期 Token 分开处理 | 2026-04-04 |
+| D3 | _get_db 复用 routes.py 的 SessionLocal | 避免重复创建 engine | 2026-04-04 |
 
 ## Surprises & Discoveries
 
