@@ -35,7 +35,7 @@
 
 | Task | Name | Status | Notes |
 |------|------|--------|-------|
-| [task-009](docs/tasks/task-009.md) | 登录/注册页 | ⬜ Not started | 需拍板 UI |
+| [task-009](docs/tasks/task-009.md) | 登录/注册页 | ✅ Done | LoginPage + App.vue 登录态集成 |
 | [task-010](docs/tasks/task-010.md) | 设置页 | ⬜ Not started | 需拍板交互 |
 | [task-011](docs/tasks/task-011.md) | 导航栏改造 | ⬜ Not started | 需拍板布局 |
 

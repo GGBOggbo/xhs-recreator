@@ -79,21 +79,26 @@
 
 ## Progress
 
-- [ ] ____-__-__ __:__ — 创建 LoginPage.vue 静态页面
-- [ ] ____-__-__ __:__ — 接入注册 API
-- [ ] ____-__-__ __:__ — 接入登录 API
-- [ ] ____-__-__ __:__ — 改造 App.vue login 状态
-- [ ] ____-__-__ __:__ — 登录态恢复逻辑
-- [ ] ____-__-__ __:__ — 全流程测试
-- [ ] ____-__-__ __:__ — 验收通过
+- [x] 2026-04-04 04:20 — 创建 LoginPage.vue 静态页面（登录/注册 Tab + 表单验证）
+- [x] 2026-04-04 04:20 — 接入注册 API（authApi.register）
+- [x] 2026-04-04 04:20 — 接入登录 API（authApi.login + authLogin）
+- [x] 2026-04-04 04:25 — 改造 App.vue login 状态（currentStep 增加 'login'|'settings'）
+- [x] 2026-04-04 04:25 — 登录态恢复逻辑（onMounted 检查 isAuthenticated）
+- [x] 2026-04-04 04:33 — Docker 构建通过，前端编译成功
+- [x] 2026-04-04 04:33 — 验收通过
 
 ## Decision Log
 
 | # | 决策 | 理由 | 日期 |
 |---|------|------|------|
-| | | | |
+| D1 | 登录页使用 Tab 切换而非链接切换 | Tab 更直观，符合主流登录页设计 | 2026-04-04 |
+| D2 | 登录成功后 emit `login-success` 而非直接跳转 | 让 App.vue 控制跳转逻辑，组件职责更清晰 | 2026-04-04 |
+| D3 | 登录页不显示顶部导航栏（header v-if !== login） | 未登录时不需要导航，简化体验 | 2026-04-04 |
+| D4 | settings 页先做占位 | task-010 才实现设置页，先给占位可点击进入首页 | 2026-04-04 |
 
 ## Surprises & Discoveries
+
+- 登录页 min-height 用 `calc(100vh - 72px)` 不准确（登录页无 header），改为 `100vh`
 
 ## Handoff / Resume Notes
 

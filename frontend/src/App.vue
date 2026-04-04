@@ -2,14 +2,16 @@
 import { ref, onMounted, watch } from 'vue'
 import LinkInput from './components/LinkInput.vue'
 import LandingPage from './components/LandingPage.vue'
+import LoginPage from './components/LoginPage.vue'
 import PreviewConfig from './components/PreviewConfig.vue'
 import ProgressPanel from './components/ProgressPanel.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import HistoryList from './components/HistoryList.vue'
+import { isAuthenticated } from './utils/auth'
 
 // 状态
 const currentTaskId = ref<string>('')
-const currentStep = ref<'landing' | 'input' | 'preview' | 'processing' | 'result' | 'history'>('landing')
+const currentStep = ref<'login' | 'landing' | 'input' | 'preview' | 'processing' | 'result' | 'history' | 'settings'>('login')
 const originalContent = ref<any>(null)
 const generatedResult = ref<any>(null)
 
@@ -18,6 +20,19 @@ const isDarkMode = ref(false)
 
 // 初始化 - 恢复页面状态
 onMounted(() => {
+  // 检查登录态：已登录 → 恢复上次页面，未登录 → 登录页
+  if (isAuthenticated()) {
+    const savedStep = sessionStorage.getItem('xhs_step')
+    if (savedStep && savedStep !== 'login') {
+      currentStep.value = savedStep as any
+    } else {
+      currentStep.value = 'landing'
+    }
+  } else {
+    currentStep.value = 'login'
+    return // 未登录不恢复其他状态
+  }
+
   // 恢复夜间模式
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme === 'dark') {
@@ -26,14 +41,10 @@ onMounted(() => {
   }
 
   // 恢复页面状态
-  const savedStep = sessionStorage.getItem('xhs_step')
   const savedTaskId = sessionStorage.getItem('xhs_task_id')
   const savedContent = sessionStorage.getItem('xhs_content')
   const savedResult = sessionStorage.getItem('xhs_result')
 
-  if (savedStep) {
-    currentStep.value = savedStep as any
-  }
   if (savedTaskId) {
     currentTaskId.value = savedTaskId
   }
@@ -149,12 +160,17 @@ const goToHistory = () => {
 const backFromHistory = () => {
   currentStep.value = 'landing'
 }
+
+// 登录成功处理
+const handleLoginSuccess = (data: { has_cookie: boolean }) => {
+  currentStep.value = data.has_cookie ? 'landing' : 'settings'
+}
 </script>
 
 <template>
   <div class="app" :class="{ 'dark-mode': isDarkMode }">
-    <!-- 顶部导航栏 -->
-    <header class="header">
+    <!-- 顶部导航栏（登录页隐藏） -->
+    <header v-if="currentStep !== 'login'" class="header">
       <div class="header-inner">
         <!-- 左侧品牌 -->
         <div class="brand" @click="handleBrandClick">红薯创作坊</div>
@@ -231,6 +247,19 @@ const backFromHistory = () => {
     </header>
 
     <main class="main-content">
+      <!-- 登录页 -->
+      <LoginPage
+        v-if="currentStep === 'login'"
+        @login-success="handleLoginSuccess"
+      />
+
+      <!-- 设置页占位（task-010 实现） -->
+      <div v-else-if="currentStep === 'settings'" class="settings-placeholder">
+        <p>设置页（task-010 实现中...）</p>
+        <button class="back-btn" @click="currentStep = 'landing'">进入首页</button>
+      </div>
+
+      <template v-else>
       <!-- 落地页 -->
       <LandingPage
         v-if="currentStep === 'landing'"
@@ -286,6 +315,7 @@ const backFromHistory = () => {
           :result="generatedResult"
           @reset="handleReset"
         />
+      </template>
       </template>
     </main>
   </div>
@@ -583,6 +613,30 @@ const backFromHistory = () => {
 
 .dark-mode .page-title {
   color: #FFFFFF;
+}
+
+/* 设置页占位 */
+.settings-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 72px);
+  gap: 16px;
+  color: #9CA3AF;
+}
+
+.settings-placeholder p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.settings-placeholder .back-btn {
+  display: inline-flex;
+}
+
+.dark-mode .settings-placeholder {
+  color: #6B7280;
 }
 
 /* 响应式 */
