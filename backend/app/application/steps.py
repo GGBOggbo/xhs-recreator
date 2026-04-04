@@ -17,7 +17,7 @@ async def fetch_note_step(crawler, url: str, selected_indices: list[int], cookie
     Raises:
         Exception: 爬取失败时抛出
     """
-    success, msg, note_data = crawler.fetch_note(url, cookies=cookies)
+    success, msg, note_data = crawler.fetch_note(url, cookies=cookies_plain)
     if not success:
         raise Exception(f"获取笔记失败: {msg}")
     if not note_data:
