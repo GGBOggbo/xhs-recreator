@@ -107,7 +107,7 @@ async def fetch_note(url: str, user: dict = Depends(get_current_user)):
 
 
 @router.get("/proxy-image")
-async def proxy_image(url: str, user: dict = Depends(get_current_user)):
+async def proxy_image(url: str):
     """
     代理图片请求，绕过防盗链
 
