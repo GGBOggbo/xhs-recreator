@@ -77,7 +77,7 @@ class TaskRunner:
             # ========== Phase 1: 爬取内容 ==========
             await self._update_status(db, task, TaskStatus.FETCHING, 5, "正在获取笔记内容...")
 
-            note_data, selected_images = await fetch_note_step(self.crawler, task.url, selected_indices, cookies=cookies_plain)
+            note_data, selected_images = await fetch_note_step(self.crawler, task.url, selected_indices, cookies_plain=cookies_plain)
 
             # 保存爬取结果到 DB
             task.original_title = note_data.title
